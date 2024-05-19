@@ -10,7 +10,7 @@ export default function CustomCard(props: any) {
   return (
     <Box
       p="xl"
-      w={mobile ? "100%" : "45%"}
+      w={mobile ? "100%" : "48%"}
       ref={ref}
       component="div"
       style={{
@@ -22,7 +22,10 @@ export default function CustomCard(props: any) {
         borderRadius: "10px",
       }}
       bg="white"
-      onClick={() => setChecked(!checked)}
+      onClick={() => {
+        props?.onChecked(props.key);
+        setChecked(!checked);
+      }}
     >
       <Box component="div">
         <Text size="lg">{props?.name}</Text>
@@ -30,20 +33,12 @@ export default function CustomCard(props: any) {
       <Box component="div">
         <Checkbox
           checked={checked}
-          onChange={(event) => setChecked(event.currentTarget.checked)}
+          onChange={(event) => {
+            setChecked(event.currentTarget.checked);
+            props?.onChecked(props.key);
+          }}
         />
       </Box>
-      {/* <Grid>
-        <Grid.Col span={10}>fit content</Grid.Col>
-        <Grid.Col span={2}>2</Grid.Col>
-      </Grid> */}
-      {/* <Text w={500} size="lg">
-        You&apos;ve won a million dollars in cash!
-      </Text>
-
-      <Text mt="xs" color="dimmed" size="sm">
-        Please click
-      </Text> */}
     </Box>
   );
 }
