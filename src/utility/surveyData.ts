@@ -1250,10 +1250,11 @@ export const surveyData = {
                     isChecked: false,
                   },
                   {
-                    key: "no",
+                    key: "__intro-taxyearoptions_skip",
                     name: "No",
                     icon: "americas.svg",
                     isChecked: false,
+                    skip: true,
                   },
                 ],
                 required: true,

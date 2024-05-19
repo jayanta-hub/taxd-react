@@ -1,20 +1,23 @@
 import { Box, Checkbox, Text, useMantineTheme } from "@mantine/core";
 import { useMediaQuery, useHover } from "@mantine/hooks";
-import React, { useState } from "react";
+import { useEffect, useState } from "react";
 
 const GroupCheckbox = (props: any) => {
-  console.log("🚀 ~ GroupCheckbox ~ props:", props);
   const theme = useMantineTheme();
   const mobile = useMediaQuery(`(max-width: ${theme.breakpoints.sm})`);
   const [data, setData] = useState(props.renderItems);
   const onCheckedHandler = (item: any) => {
-    const res = data.map((e: any) => {
-      if (e?.key === item) {
+    const res = data?.map((e: any) => {
+      if (e?.key === item?.key) {
         return { ...e, isChecked: !e?.isChecked };
       }
-      return props?.multiSelect ? { ...e, isChecked: false } : e;
+      return props?.multiSelect && !item?.skip
+        ? e?.skip && e?.isChecked
+          ? { ...e, isChecked: false }
+          : e
+        : { ...e, isChecked: false };
     });
-    setData(res);
+    setData(res || []);
     props?.onChecked(res.filter((d: any) => d?.isChecked));
   };
 
@@ -38,7 +41,7 @@ const GroupCheckbox = (props: any) => {
         }}
         bg="white"
         onClick={() => {
-          onCheckedHandler(data?.key);
+          onCheckedHandler(data);
         }}
       >
         <Box component="div">
@@ -49,16 +52,19 @@ const GroupCheckbox = (props: any) => {
             key={data?.key}
             checked={data?.isChecked}
             onChange={() => {
-              onCheckedHandler(data?.key);
+              // onCheckedHandler(data);
             }}
           />
         </Box>
       </Box>
     );
   };
+  useEffect(() => {
+    setData(props.renderItems);
+  }, [props]);
 
-  return data?.map((item: any) => {
-    return <CheckBox data={item} />;
+  return data?.map((item: any, ind: number) => {
+    return <CheckBox data={item} key={ind} />;
   });
 };
 

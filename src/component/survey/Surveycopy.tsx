@@ -13,12 +13,12 @@ import {
 import { surveyData } from "../../utility/surveyData";
 import GroupCheckbox from "../GroupCheckbox/GroupCheckbox";
 
-const Survey = () => {
+const Surveycopy = () => {
   const [renderData, setRenderData] = useState(
     surveyData?.data?.data?.categories?.Introduction?.questionFlow
   );
   const [currentIndex, setCurrentIndex] = useState(0);
-  const inputElements = useMemo(() => {
+  const formBuilder = useMemo(() => {
     function getField(field: any) {
       const {
         id,
@@ -29,7 +29,6 @@ const Survey = () => {
         value,
         placeholder,
         data,
-        question,
         elementType,
         choices,
         type,
@@ -67,6 +66,11 @@ const Survey = () => {
               renderItems={choices}
               onChecked={(e: any) => {
                 console.log("sdcn ", e);
+                // if (e[0]?.name === "No") {
+                //   setTimeout(() => {
+                //     setCurrentIndex((prev) => prev + 1);
+                //   }, 700);
+                // }
               }}
             />
           );
@@ -82,24 +86,53 @@ const Survey = () => {
       }
     }
     return [renderData[currentIndex]].map((item: any, ind: number) => (
-      <Box
-        display="flex"
-        mt={2}
-        mb={12}
-        style={{
-          flexDirection: "row",
-          justifyContent: "flex-start",
-          alignItems: "center",
-          flexWrap: "wrap",
-          gap: 20,
-        }}
-        // bg="pink"
-      >
-        {(item?.question?.type === "Boolean" ||
-          item?.question?.type === "MultipleChoice") &&
-          getField(item?.question)}
-        {/* {getField(item?.question)} */}
-      </Box>
+      <>
+        <Box key={ind} w="80%">
+          <Text size="lg">{item?.question?.question}</Text>
+          <div dangerouslySetInnerHTML={{ __html: item?.question?.sub_text }} />
+          <Box
+            display="flex"
+            mt={2}
+            mb={12}
+            style={{
+              flexDirection: "row",
+              justifyContent: "flex-start",
+              alignItems: "center",
+              flexWrap: "wrap",
+              gap: 20,
+            }}
+          >
+            {(item?.question?.type === "Boolean" ||
+              item?.question?.type === "MultipleChoice") &&
+              getField(item?.question)}
+          </Box>
+          <Box
+            mt={2}
+            style={{
+              display: "flex",
+              justifyContent: currentIndex > 0 ? "space-between" : "flex-end",
+            }}
+          >
+            {currentIndex > 0 && (
+              <Button
+                onClick={() => {
+                  currentIndex > 0 && setCurrentIndex(currentIndex - 1);
+                }}
+              >
+                Back
+              </Button>
+            )}
+            <Button
+              onClick={() => {
+                currentIndex < renderData.length - 1 &&
+                  setCurrentIndex(currentIndex + 1);
+              }}
+            >
+              Next
+            </Button>
+          </Box>
+        </Box>
+      </>
     ));
   }, [currentIndex, renderData]);
 
@@ -115,46 +148,10 @@ const Survey = () => {
         w="50%"
         bg="#F8F9FA"
       >
-        {[renderData[currentIndex]].map((item, ind) => (
-          <>
-            <Box key={ind} w="80%">
-              <Text size="lg">{item?.question?.question}</Text>
-              <div
-                dangerouslySetInnerHTML={{ __html: item?.question?.sub_text }}
-              />
-              {inputElements ? <>{inputElements}</> : "Fields not found"}
-              <Box
-                mt={2}
-                style={{
-                  display: "flex",
-                  justifyContent:
-                    currentIndex > 0 ? "space-between" : "flex-end",
-                }}
-              >
-                {currentIndex > 0 && (
-                  <Button
-                    onClick={() => {
-                      currentIndex > 0 && setCurrentIndex(currentIndex - 1);
-                    }}
-                  >
-                    Back
-                  </Button>
-                )}
-                <Button
-                  onClick={() => {
-                    currentIndex < renderData.length - 1 &&
-                      setCurrentIndex(currentIndex + 1);
-                  }}
-                >
-                  Next
-                </Button>
-              </Box>
-            </Box>
-          </>
-        ))}
+        {formBuilder.length ? formBuilder : "No Element found"}
       </Box>
     </>
   );
 };
 
-export default Survey;
+export default Surveycopy;
