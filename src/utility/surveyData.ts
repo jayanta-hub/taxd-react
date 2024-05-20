@@ -1205,12 +1205,7 @@ export const surveyData = {
                 ],
                 required: true,
               },
-              answer: [
-                "__resident_other_country",
-                "__income_overseas",
-                "__trust_income",
-                "__overseas_pension",
-              ],
+              answer: [],
             },
             {
               question: {

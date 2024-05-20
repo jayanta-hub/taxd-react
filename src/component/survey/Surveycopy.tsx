@@ -1,7 +1,7 @@
 "use client";
 /* eslint-disable @typescript-eslint/no-unused-vars */
 
-import { useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import {
   Box,
   Button,
@@ -10,14 +10,55 @@ import {
   Text,
   TextInput,
 } from "@mantine/core";
-import { surveyData } from "../../utility/surveyData";
 import GroupCheckbox from "../GroupCheckbox/GroupCheckbox";
+import { isNotEmpty, useForm, yupResolver } from "@mantine/form";
 
-const Surveycopy = () => {
-  const [renderData, setRenderData] = useState(
-    surveyData?.data?.data?.categories?.Introduction?.questionFlow
-  );
+const Surveycopy = ({ data }: any) => {
   const [currentIndex, setCurrentIndex] = useState(0);
+
+  const constructValidateObject = useCallback(() => {
+    // const { schema, data } = config;
+    let validateObj: any = {};
+
+    [data[currentIndex]]?.forEach((d: any) => {
+      const {
+        question: { json_key, required, validate: {} = {} },
+      } = d;
+      if (required)
+        validateObj[json_key] = (values: any) => {
+          if (values?.length < 1 || !values) {
+            return "Please select at least One items.";
+          }
+
+          return null;
+        };
+    });
+    console.log("🚀 ~ constructValidateObject ~ validateObj:", validateObj);
+    return validateObj;
+  }, [currentIndex, data]);
+  const getInitialFormData = useCallback(() => {
+    console.log("gjgyguygu");
+    const initialValues: any = {};
+    [data[currentIndex]]?.forEach((d) => {
+      initialValues[d?.question?.json_key] = d?.answer ?? "";
+    });
+    return { initialValues };
+  }, [currentIndex, data]);
+  // console.log("dads", getInitialFormData());
+  const form = useForm({
+    ...getInitialFormData(),
+    validate: constructValidateObject(),
+    validateInputOnBlur: true,
+  });
+  // console.log("first", form, form.errors[data[currentIndex].question.json_key]);
+
+  function handleSubmit(e: any) {
+    console.log("handleSubmit", e, currentIndex);
+    currentIndex < data.length - 1 && setCurrentIndex(currentIndex + 1);
+  }
+  function onclickHandler(name: any) {
+    // if (onClick) onClick(name);
+  }
   const formBuilder = useMemo(() => {
     function getField(field: any) {
       const {
@@ -32,7 +73,9 @@ const Surveycopy = () => {
         elementType,
         choices,
         type,
+        json_key,
       } = field;
+      // console.log("🚀 ~ getField ~ field:", field);
       const inputProps = {
         name,
         label,
@@ -42,7 +85,7 @@ const Surveycopy = () => {
         data,
         withAsterisk: required ?? false,
         placeholder: placeholder ?? `Enter ${label?.toLowerCase()}`,
-        // ..._form?.getInputProps(name), // this accepts only input and checkbox
+        // ...form?.getInputProps(name), // this accepts only input and checkbox
       };
       switch (elementType) {
         case "input":
@@ -63,8 +106,13 @@ const Surveycopy = () => {
                   ? false
                   : true
               }
+              key={json_key}
               renderItems={choices}
               onChecked={(e: any) => {
+                form.setFieldValue(
+                  json_key,
+                  e.map((d: any) => d?.key)
+                );
                 console.log("sdcn ", e);
                 // if (e[0]?.name === "No") {
                 //   setTimeout(() => {
@@ -85,11 +133,21 @@ const Surveycopy = () => {
           return <>Element '{element}' not found</>;
       }
     }
-    return [renderData[currentIndex]].map((item: any, ind: number) => (
+    return [data[currentIndex]].map((item: any, ind: number) => (
       <>
-        <Box key={ind} w="80%">
+        <Box
+          key={ind}
+          w="80%"
+          component="form"
+          onSubmit={form.onSubmit(handleSubmit)}
+        >
           <Text size="lg">{item?.question?.question}</Text>
           <div dangerouslySetInnerHTML={{ __html: item?.question?.sub_text }} />
+          {form.errors && (
+            <Text c="red" size="sm">
+              {form.errors[item?.question?.json_key]}
+            </Text>
+          )}
           <Box
             display="flex"
             mt={2}
@@ -123,9 +181,10 @@ const Surveycopy = () => {
               </Button>
             )}
             <Button
+              type="submit"
               onClick={() => {
-                currentIndex < renderData.length - 1 &&
-                  setCurrentIndex(currentIndex + 1);
+                // currentIndex < data.length - 1 &&
+                //   setCurrentIndex(currentIndex + 1);
               }}
             >
               Next
@@ -134,7 +193,7 @@ const Surveycopy = () => {
         </Box>
       </>
     ));
-  }, [currentIndex, renderData]);
+  }, [currentIndex, data, form.errors]);
 
   return (
     <>

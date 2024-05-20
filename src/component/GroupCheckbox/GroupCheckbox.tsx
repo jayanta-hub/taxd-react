@@ -1,11 +1,13 @@
 import { Box, Checkbox, Text, useMantineTheme } from "@mantine/core";
 import { useMediaQuery, useHover } from "@mantine/hooks";
-import { useEffect, useState } from "react";
+import { memo, useEffect, useState } from "react";
 
 const GroupCheckbox = (props: any) => {
+  console.log("🚀 ~ GroupCheckbox ~ props:", props)
   const theme = useMantineTheme();
   const mobile = useMediaQuery(`(max-width: ${theme.breakpoints.sm})`);
   const [data, setData] = useState(props.renderItems);
+  console.log("🚀 ~ GroupCheckbox ~ data:", data);
   const onCheckedHandler = (item: any) => {
     const res = data?.map((e: any) => {
       if (e?.key === item?.key) {
@@ -68,4 +70,4 @@ const GroupCheckbox = (props: any) => {
   });
 };
 
-export default GroupCheckbox;
+export default memo(GroupCheckbox);
