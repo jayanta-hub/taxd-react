@@ -33,7 +33,7 @@ export function isFn(fn: any) {
 
 export const PATTERNS = Object.freeze({
   EMAIL: /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/,
-  PASSWORD: ''
+  PASSWORD: "",
 });
 
 /** StorybookTableRow type */
@@ -50,7 +50,8 @@ export function storybookTable(data: STR[], desc = "", sort = true) {
     return `<tr><td style="padding: 0px;fontWeight:700; border-spacing: 0;">${d.lab}</td><td style="padding: 0px;">${d.desc}</td></tr>`;
   };
 
-  if (sort) data = data?.sort((a, b) => (a.lab > b.lab ? 1 : b.lab > a.lab ? -1 : 0));
+  if (sort)
+    data = data?.sort((a, b) => (a.lab > b.lab ? 1 : b.lab > a.lab ? -1 : 0));
 
   const tr = data?.reduce((prev: string, d: STR) => `${prev}${getTR(d)}`, "");
   return `<p>${desc}</p><table>${tr}</table>`;

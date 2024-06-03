@@ -4,7 +4,7 @@
 import { useState } from "react";
 import { Box, Button, Text } from "@mantine/core";
 import { surveyData } from "../../utility/surveyData";
-import CustomCard from "../CustomCard/CustomCard";
+import CustomCard from "../customCard/CustomCard";
 
 const Survey = () => {
   const [renderData, setRenderData] = useState(

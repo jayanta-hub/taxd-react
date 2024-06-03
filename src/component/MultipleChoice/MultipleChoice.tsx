@@ -1,10 +1,16 @@
-import React from 'react';
-import { Box } from '@mantine/core';
-import CustomCard from '../CustomCard/CustomCard';
+import React from "react";
+import { Box } from "@mantine/core";
+import CustomCard from "../customCard/CustomCard";
 
 const MultipleChoice = (props: any) => {
-  console.log('🚀 ~ MultipleChoice ~ props:', props);
-  return <>{props?.choices.map((item: any) => <CustomCard {...item} key={item.key} />)}</>;
+  console.log("🚀 ~ MultipleChoice ~ props:", props);
+  return (
+    <>
+      {props?.choices.map((item: any) => (
+        <CustomCard {...item} key={item.key} />
+      ))}
+    </>
+  );
 };
 
 export default MultipleChoice;

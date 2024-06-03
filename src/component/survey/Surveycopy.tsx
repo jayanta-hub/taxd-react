@@ -10,7 +10,7 @@ import {
   Text,
   TextInput,
 } from "@mantine/core";
-import GroupCheckbox from "../GroupCheckbox/GroupCheckbox";
+import GroupCheckbox from "../groupCheckbox/GroupCheckbox";
 import { isNotEmpty, useForm, yupResolver } from "@mantine/form";
 
 const Surveycopy = ({ data }: any) => {
