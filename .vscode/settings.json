@@ -1,0 +1,6 @@
+{
+  "prettier.endOfLine": "auto",
+  "eslint.options": {
+    "rulePaths": ["./.eslintrc"]
+  }
+}

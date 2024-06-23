@@ -1,7 +1,12 @@
 import { configureStore } from "@reduxjs/toolkit";
-import userReducer from "./usersData/userDataSlice";
+import userReducer from "./slice/assessmentSlice";
+import { taxdApi } from "./api";
+
 export const store = configureStore({
+  devTools: true,
+  middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(taxdApi.middleware),
   reducer: {
+    [taxdApi.reducerPath]: taxdApi.reducer,
     userReducer,
   },
 });

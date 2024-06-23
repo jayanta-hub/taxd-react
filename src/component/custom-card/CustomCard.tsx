@@ -1,8 +1,8 @@
 import { Box, Checkbox, Text, useMantineTheme } from "@mantine/core";
 import { useMediaQuery, useHover } from "@mantine/hooks";
 import { useState } from "react";
+
 export default function CustomCard(props: any) {
-  console.log("🚀 ~ CustomCard ~ props:", props);
   const { hovered, ref } = useHover();
   const theme = useMantineTheme();
   const mobile = useMediaQuery(`(max-width: ${theme.breakpoints.sm})`);
@@ -25,8 +25,7 @@ export default function CustomCard(props: any) {
       onClick={() => {
         props?.onChecked(props.key);
         setChecked(!checked);
-      }}
-    >
+      }}>
       <Box component="div">
         <Text size="lg">{props?.name}</Text>
       </Box>

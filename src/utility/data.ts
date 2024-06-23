@@ -18,7 +18,7 @@ export const surveyData = {
           questionFlow: [
             {
               question: {
-                json_key: "intro-taxyearoptions",
+                question_key: "intro-taxyearoptions",
                 category: "Introduction",
                 question: "Have any of these applied to you?",
                 type: "Multiple Choice",
@@ -56,11 +56,11 @@ export const surveyData = {
                 ],
                 required: true,
               },
-              answer: ["__income_overseas"],
+              answer: ["__intro-taxyearoptions_skip"],
             },
             {
               question: {
-                json_key: "intro-nondom",
+                question_key: "intro-nondom",
                 category: "Introduction",
                 question: "Did you keep your foreign income overseas?",
                 type: "Boolean",
@@ -69,17 +69,30 @@ export const surveyData = {
                 help_text:
                   "<h3>Remittance Basis</h3>\n<p>The remittance basis is an alternative tax treatment that’s available to individuals who are resident but not domiciled in the UK and have foreign income and gains. Remittance basis is not available if you are deemed domicile in the UK. You will be deemed domicile if you were born in the UK with UK domicile of origin and UK resident in 2022 to 2023 tax year, or you have been UK resident for at least 15 of the previous 20 tax years and UK resident in 2022 to 2023 tax year.</p>",
                 submit: "intro-jobstatus",
+                choices: [
+                  {
+                    key: "__intro-nondom_yes",
+                    skip: true,
+                    name: "Yes",
+                  },
+
+                  {
+                    key: "__intro-nondom_No",
+                    skip: true,
+                    name: "No",
+                  },
+                ],
                 display_rulesets: [
                   {
                     if_display_false: "intro-jobstatus",
                     rules: [
                       {
-                        json_key: "intro-taxyearoptions",
+                        question_key: "intro-taxyearoptions",
                         operator: "contains",
                         value: "__income_overseas",
                       },
                       {
-                        json_key: "intro-taxyearoptions",
+                        question_key: "intro-taxyearoptions",
                         operator: "contains",
                         value: "__overseas_pension",
                       },
@@ -89,16 +102,15 @@ export const surveyData = {
                 ],
                 required: true,
               },
-              answer: true,
+              answer: ["__intro-nondom_yes"],
             },
             {
               question: {
-                json_key: "intro-jobstatus",
+                question_key: "intro-jobstatus",
                 category: "Introduction",
                 question: "Your job status in 2023/2024",
                 type: "Multiple Choice",
-                sub_text:
-                  "<p>You can select more than one.</p><br /><strong></strong>",
+                sub_text: "<p>You can select more than one.</p><br /><strong></strong>",
                 help_text:
                   "<h3>Job Status</h3>\n<p>Your job status determines which parts of the tax return will need to be completed.</p>\n<p>Select <strong>employed </strong>if you</p>\n<ul>\n<li>work for an employer who deducts tax through PAYE</li>\n<li>received income as a company director</li>\n<li>hold an office such as a chairperson, secretary or treasurer and received an income for that work</li>\n<li>work for one person through another company or partnership</li>\n</ul>\n<p>If you were the <strong>director of a ltd company,</strong> this is technically the same as employment.</p>\n<p>Select <strong>self-employed</strong> if you're working for yourself as a freelance or the owner of a business rather than for an employer.</p>\n<p>Select <strong>landlord</strong> if you have rental properties held in your personal name.</p>\n<p>If neither of the above options apply to you, select <strong>No employment</strong>.</p>",
                 submit: "intro-income",
@@ -146,7 +158,7 @@ export const surveyData = {
             },
             {
               question: {
-                json_key: "intro-income",
+                question_key: "intro-income",
                 category: "Introduction",
                 question: "Additional sources of income",
                 type: "Multiple Choice",
@@ -209,7 +221,7 @@ export const surveyData = {
             },
             {
               question: {
-                json_key: "intro-assets",
+                question_key: "intro-assets",
                 category: "Introduction",
                 question: "Have you sold any assets?",
                 type: "Multiple Choice",
@@ -296,12 +308,11 @@ export const surveyData = {
           questionFlow: [
             {
               question: {
-                json_key: "residence-nonres_tests",
+                question_key: "residence-nonres_tests",
                 category: "Residence",
                 question: "Automatic non-resident tests",
                 type: "Multi Toggle",
-                sub_text:
-                  "We’re going to ask you questions to help determine your tax residence.",
+                sub_text: "We’re going to ask you questions to help determine your tax residence.",
                 submit: "residence-res_tests",
                 if_true: "residence-days_multi",
                 sub_questions: [
@@ -314,7 +325,7 @@ export const surveyData = {
                 questionObjects: [
                   {
                     question: {
-                      json_key: "residence-nonres_46",
+                      question_key: "residence-nonres_46",
                       category: "Residence",
                       question:
                         "You were a <strong>non-UK resident throughout the whole of the previous three tax years</strong> and present in UK for <strong>less than</strong> 46 days in the 2023/2024 tax year.",
@@ -328,7 +339,7 @@ export const surveyData = {
                   },
                   {
                     question: {
-                      json_key: "residence-nonres_16",
+                      question_key: "residence-nonres_16",
                       category: "Residence",
                       question:
                         "You were a <strong>resident in UK in at least one of the previous three tax years</strong> and present in UK <strong>less than</strong> 16 days in the 2023/2024 tax year.",
@@ -342,7 +353,7 @@ export const surveyData = {
                   },
                   {
                     question: {
-                      json_key: "residence-nonres_fto",
+                      question_key: "residence-nonres_fto",
                       category: "Residence",
                       question:
                         "You are working full time overseas and were present in UK for <strong>less than</strong> 91 days and spent <strong>less than</strong> 31 days working in UK.",
@@ -374,7 +385,7 @@ export const surveyData = {
           questionFlow: [
             {
               question: {
-                json_key: "employer-addnew",
+                question_key: "employer-addnew",
 
                 category: "Employment",
 
@@ -416,7 +427,7 @@ export const surveyData = {
           questionFlow: [
             {
               question: {
-                json_key: "self-addnew",
+                question_key: "self-addnew",
 
                 category: "Self Employed",
 
@@ -441,7 +452,7 @@ export const surveyData = {
                     questionFlow: [
                       {
                         question: {
-                          json_key: "self-intro_multi",
+                          question_key: "self-intro_multi",
 
                           category: "Self Employed Business",
 
@@ -453,13 +464,7 @@ export const surveyData = {
 
                           submit: "self-newdetails",
 
-                          sub_questions: [
-                            "self-name",
-
-                            "self-description",
-
-                            "self-postcode",
-                          ],
+                          sub_questions: ["self-name", "self-description", "self-postcode"],
 
                           required: true,
 
@@ -468,7 +473,7 @@ export const surveyData = {
                           questionObjects: [
                             {
                               question: {
-                                json_key: "self-name",
+                                question_key: "self-name",
 
                                 category: "Self Employed Business",
 
@@ -476,8 +481,7 @@ export const surveyData = {
 
                                 type: "Free text",
 
-                                sub_text:
-                                  "Your name, or the name of your business.",
+                                sub_text: "Your name, or the name of your business.",
 
                                 help_text:
                                   "<h3>Self Employment Name</h3>\n<p>This is the name that HMRC will see. You can either choose your trading name or personal name.</p>",
@@ -499,12 +503,11 @@ export const surveyData = {
 
                             {
                               question: {
-                                json_key: "self-description",
+                                question_key: "self-description",
 
                                 category: "Self Employed Business",
 
-                                question:
-                                  "How would you describe your business?",
+                                question: "How would you describe your business?",
 
                                 type: "Free text",
 
@@ -531,12 +534,11 @@ export const surveyData = {
 
                             {
                               question: {
-                                json_key: "self-postcode",
+                                question_key: "self-postcode",
 
                                 category: "Self Employed Business",
 
-                                question:
-                                  "What is the postcode of your business address?",
+                                question: "What is the postcode of your business address?",
 
                                 type: "Postcode",
 
@@ -575,12 +577,11 @@ export const surveyData = {
 
                       {
                         question: {
-                          json_key: "self-newdetails",
+                          question_key: "self-newdetails",
 
                           category: "Self Employed Business",
 
-                          question:
-                            "Have any of the details above changed within the past year?",
+                          question: "Have any of the details above changed within the past year?",
 
                           type: "Boolean Multi",
 
@@ -613,7 +614,7 @@ export const surveyData = {
                             {
                               booleanQuestion: {
                                 question: {
-                                  json_key: "self-detailchanges",
+                                  question_key: "self-detailchanges",
 
                                   category: "Self Employed Business",
 
@@ -640,7 +641,7 @@ export const surveyData = {
                               questionObjects: [
                                 {
                                   question: {
-                                    json_key: "self-newname",
+                                    question_key: "self-newname",
 
                                     category: "Self Employed Business",
 
@@ -660,7 +661,7 @@ export const surveyData = {
 
                                 {
                                   question: {
-                                    json_key: "self-newdescription",
+                                    question_key: "self-newdescription",
 
                                     category: "Self Employed Business",
 
@@ -674,8 +675,7 @@ export const surveyData = {
                                     parent_question: "self-newdetails",
 
                                     validation: {
-                                      regex:
-                                        "^[A-Za-z0-9 &'\\(\\)*,-\\.@£]{1,42}$",
+                                      regex: "^[A-Za-z0-9 &'\\(\\)*,-\\.@£]{1,42}$",
 
                                       title:
                                         "42 characters allowed. Allowed characters are A-Za-z0-9&'()*,-.@£",
@@ -689,7 +689,7 @@ export const surveyData = {
 
                                 {
                                   question: {
-                                    json_key: "self-newpostcode",
+                                    question_key: "self-newpostcode",
 
                                     category: "Self Employed Business",
 
@@ -752,7 +752,7 @@ export const surveyData = {
                     questionFlow: [
                       {
                         question: {
-                          json_key: "self-intro_multi",
+                          question_key: "self-intro_multi",
 
                           category: "Self Employed Business",
 
@@ -764,13 +764,7 @@ export const surveyData = {
 
                           submit: "self-newdetails",
 
-                          sub_questions: [
-                            "self-name",
-
-                            "self-description",
-
-                            "self-postcode",
-                          ],
+                          sub_questions: ["self-name", "self-description", "self-postcode"],
 
                           required: true,
 
@@ -779,7 +773,7 @@ export const surveyData = {
                           questionObjects: [
                             {
                               question: {
-                                json_key: "self-name",
+                                question_key: "self-name",
 
                                 category: "Self Employed Business",
 
@@ -787,8 +781,7 @@ export const surveyData = {
 
                                 type: "Free text",
 
-                                sub_text:
-                                  "Your name, or the name of your business.",
+                                sub_text: "Your name, or the name of your business.",
 
                                 help_text:
                                   "<h3>Self Employment Name</h3>\n<p>This is the name that HMRC will see. You can either choose your trading name or personal name.</p>",
@@ -810,12 +803,11 @@ export const surveyData = {
 
                             {
                               question: {
-                                json_key: "self-description",
+                                question_key: "self-description",
 
                                 category: "Self Employed Business",
 
-                                question:
-                                  "How would you describe your business?",
+                                question: "How would you describe your business?",
 
                                 type: "Free text",
 
@@ -842,12 +834,11 @@ export const surveyData = {
 
                             {
                               question: {
-                                json_key: "self-postcode",
+                                question_key: "self-postcode",
 
                                 category: "Self Employed Business",
 
-                                question:
-                                  "What is the postcode of your business address?",
+                                question: "What is the postcode of your business address?",
 
                                 type: "Postcode",
 
@@ -886,12 +877,11 @@ export const surveyData = {
 
                       {
                         question: {
-                          json_key: "self-newdetails",
+                          question_key: "self-newdetails",
 
                           category: "Self Employed Business",
 
-                          question:
-                            "Have any of the details above changed within the past year?",
+                          question: "Have any of the details above changed within the past year?",
 
                           type: "Boolean Multi",
 
@@ -924,7 +914,7 @@ export const surveyData = {
                             {
                               booleanQuestion: {
                                 question: {
-                                  json_key: "self-detailchanges",
+                                  question_key: "self-detailchanges",
 
                                   category: "Self Employed Business",
 
@@ -951,7 +941,7 @@ export const surveyData = {
                               questionObjects: [
                                 {
                                   question: {
-                                    json_key: "self-newname",
+                                    question_key: "self-newname",
 
                                     category: "Self Employed Business",
 
@@ -971,7 +961,7 @@ export const surveyData = {
 
                                 {
                                   question: {
-                                    json_key: "self-newdescription",
+                                    question_key: "self-newdescription",
 
                                     category: "Self Employed Business",
 
@@ -985,8 +975,7 @@ export const surveyData = {
                                     parent_question: "self-newdetails",
 
                                     validation: {
-                                      regex:
-                                        "^[A-Za-z0-9 &'\\(\\)*,-\\.@£]{1,42}$",
+                                      regex: "^[A-Za-z0-9 &'\\(\\)*,-\\.@£]{1,42}$",
 
                                       title:
                                         "42 characters allowed. Allowed characters are A-Za-z0-9&'()*,-.@£",
@@ -1000,7 +989,7 @@ export const surveyData = {
 
                                 {
                                   question: {
-                                    json_key: "self-newpostcode",
+                                    question_key: "self-newpostcode",
 
                                     category: "Self Employed Business",
 
@@ -1030,7 +1019,7 @@ export const surveyData = {
 
                       {
                         question: {
-                          json_key: "self-sector",
+                          question_key: "self-sector",
 
                           category: "Self Employed Business",
 
@@ -1203,7 +1192,7 @@ export const surveyData = {
           questionFlow: [
             {
               question: {
-                json_key: "partnership-addnew",
+                question_key: "partnership-addnew",
 
                 category: "Partnership",
 
@@ -1228,17 +1217,15 @@ export const surveyData = {
                     questionFlow: [
                       {
                         question: {
-                          json_key: "partnership-intro_multi",
+                          question_key: "partnership-intro_multi",
 
                           category: "Partnership Business",
 
-                          question:
-                            "We'd love to get to know more about your partnership!",
+                          question: "We'd love to get to know more about your partnership!",
 
                           type: "Multi Q",
 
-                          sub_text:
-                            "Could you please provide us with some initial information?",
+                          sub_text: "Could you please provide us with some initial information?",
 
                           submit: "partnership-join_leave",
 
@@ -1257,7 +1244,7 @@ export const surveyData = {
                           questionObjects: [
                             {
                               question: {
-                                json_key: "partnership-name",
+                                question_key: "partnership-name",
 
                                 category: "Partnership Business",
 
@@ -1279,12 +1266,11 @@ export const surveyData = {
 
                             {
                               question: {
-                                json_key: "partnership-reference_no",
+                                question_key: "partnership-reference_no",
 
                                 category: "Partnership Business",
 
-                                question:
-                                  "What's the UTR number for your partnership?",
+                                question: "What's the UTR number for your partnership?",
 
                                 type: "UTR",
 
@@ -1309,7 +1295,7 @@ export const surveyData = {
 
                             {
                               question: {
-                                json_key: "partnership-description",
+                                question_key: "partnership-description",
 
                                 category: "Partnership Business",
 
@@ -1323,8 +1309,7 @@ export const surveyData = {
                                 validation: {
                                   regex: "^[A-Za-z0-9 &'\\(\\)*,-\\.@£]{1,28}$",
 
-                                  title:
-                                    "HMRC restricts the description to 28 characters.",
+                                  title: "HMRC restricts the description to 28 characters.",
                                 },
 
                                 required: true,
@@ -1404,7 +1389,7 @@ export const surveyData = {
           questionFlow: [
             {
               question: {
-                json_key: "credit-intro",
+                question_key: "credit-intro",
 
                 category: "Credits and Deductions",
 
@@ -1412,8 +1397,7 @@ export const surveyData = {
 
                 type: "Multiple Choice",
 
-                sub_text:
-                  "Consult the <strong>help icon</strong> for more information.",
+                sub_text: "Consult the <strong>help icon</strong> for more information.",
 
                 help_text:
                   "<h3>Private pension contributions</h3>\n<p>If you have a pension outside of your employment, these contributions may be subject to additional tax saving. This is achieved by extending your basic rate band. Essentially, if you pay tax at 40% or 45%, you will get 20% and 25% as a refund respectively. In most instances, a 20% relief is given at the time of payment when the pension provider \"grosses up\" the contribution you make by 25%.</p>\n<p>If this is applicable to you, please select the appropriate options so we can get the details and ensure you get the correct treatment.</p>\n<h4>Charitable giving</h4>\n<p>Similar to the above, charitable contributions are treated in the same way. If you gave to charity throughout the year, please select the option and we will make sure you get the full tax benefits.</p>\n<p>Note that donations would need to have been made in the following ways:</p>\n<ul>\n<li>Through Gift Aid</li>\n<li>Through a Payroll Giving scheme (straight from your wages or pension)</li>\n<li>Land, property or shares</li>\n</ul>\n<h4>Blind Person Allowance</h4>\n<p>The Blind Person's Allowance of <strong>£2,500</strong> in 2020/21 can be added to your yearly Personal Allowance. The Personal Allowance is the amount of money you can earn before you start paying Income Tax.</p>\n<p>To be eligible to claim, you must be located in England or Wales and:</p>\n<ul>\n<li>Be registered with your local council as blind or severely sight impaired</li>\n<li>Have a certificate that says you're blind or severely sight impaired, (or a similar document from your doctor)</li>\n</ul>\n<p>If you're in Scotland or Northern Ireland, you must:</p>\n<ul>\n<li>Be unable to carry out work in which eyesight is essential</li>\n<li>Have a certificate that says you're blind or severely sight impaired, (or a similar document from your doctor)</li>\n</ul>\n<h4>Marriage Allowance</h4>\n<p>Married couples can elect to transfer <strong>£1,260</strong> of their Personal Allowance to their spouse if they don't use it themselves. This would result in a tax saving of £252.</p>\n<p>To get this saving, the following conditions need to apply:</p>\n<ul>\n<li>You're married or in a civil partnership</li>\n<li>You don't pay Income Tax or your income is below your Personal Allowance (£12,000 for 2023/2024)</li>\n<li>Your partner pays Income Tax at the basic rate (an income between £12,501 and £50,000 for 2023/2024)</li>\n</ul>\n<p>You cannot claim Marriage Allowance if you're living together and you're not married or in a civil partnership.</p>\n<h4>Unique Occupational Scheme not deducted before tax</h4>\n<p>For almost all employees who make pension contributions to an occupational pension scheme, (a pension through their work), the contribution is taken off their salary before they pay tax. Essentially, the tax benefit is received at the source.</p>\n<p>In some rare occasions, despite an employee making contributions, their salary may be taxed from the gross amount - this is the figure they are paid before tax and pension payments.</p>",
@@ -1492,7 +1476,7 @@ export const surveyData = {
 
             {
               question: {
-                json_key: "pension-addanother",
+                question_key: "pension-addanother",
 
                 category: "Credits and Deductions",
 
@@ -1523,7 +1507,7 @@ export const surveyData = {
                 questionObjects: [
                   {
                     question: {
-                      json_key: "pension-name",
+                      question_key: "pension-name",
 
                       category: "Credits and Deductions",
 
@@ -1545,7 +1529,7 @@ export const surveyData = {
 
                   {
                     question: {
-                      json_key: "pension-type",
+                      question_key: "pension-type",
 
                       category: "Credits and Deductions",
 
@@ -1583,7 +1567,7 @@ export const surveyData = {
 
                   {
                     question: {
-                      json_key: "pension-payments",
+                      question_key: "pension-payments",
 
                       category: "Credits and Deductions",
 
@@ -1615,12 +1599,11 @@ export const surveyData = {
 
                   {
                     question: {
-                      json_key: "pension-one_off",
+                      question_key: "pension-one_off",
 
                       category: "Credits and Deductions",
 
-                      question:
-                        "Of the total above - what is the amount of one off payments made",
+                      question: "Of the total above - what is the amount of one off payments made",
 
                       sub_text:
                         "Ignore this field if all your pension payments were made on a consistent basis. HMRC will not adjust your tax code for one off payments.",
@@ -1699,7 +1682,7 @@ export const surveyData = {
           questionFlow: [
             {
               question: {
-                json_key: "interest-addbrokerage",
+                question_key: "interest-addbrokerage",
 
                 category: "Investment",
 
@@ -1732,7 +1715,7 @@ export const surveyData = {
 
                     rules: [
                       {
-                        json_key: "Introduction.intro-income",
+                        question_key: "Introduction.intro-income",
 
                         operator: "contains",
 
@@ -1751,7 +1734,7 @@ export const surveyData = {
                 questionObjects: [
                   {
                     question: {
-                      json_key: "interest-brokerage",
+                      question_key: "interest-brokerage",
 
                       category: "Investment",
 
@@ -1777,7 +1760,7 @@ export const surveyData = {
 
                   {
                     question: {
-                      json_key: "interest-joint",
+                      question_key: "interest-joint",
 
                       category: "Investment",
 
@@ -1802,7 +1785,7 @@ export const surveyData = {
 
                   {
                     question: {
-                      json_key: "interest-jointpercentage",
+                      question_key: "interest-jointpercentage",
 
                       category: "Investment",
 
@@ -1820,7 +1803,7 @@ export const surveyData = {
                         {
                           rules: [
                             {
-                              json_key: "interest-joint",
+                              question_key: "interest-joint",
 
                               operator: "is",
 
@@ -1852,7 +1835,7 @@ export const surveyData = {
 
                   {
                     question: {
-                      json_key: "interest-gross",
+                      question_key: "interest-gross",
 
                       category: "Investment",
 
@@ -1862,8 +1845,7 @@ export const surveyData = {
 
                       unit: "£",
 
-                      sub_text:
-                        "If this was a joint account, please enter the full figure.",
+                      sub_text: "If this was a joint account, please enter the full figure.",
 
                       parent_question: "interest-addbrokerage",
 
@@ -1879,7 +1861,7 @@ export const surveyData = {
 
                   {
                     question: {
-                      json_key: "interest-taxpaid",
+                      question_key: "interest-taxpaid",
 
                       category: "Investment",
 
@@ -1921,7 +1903,7 @@ export const surveyData = {
           questionFlow: [
             {
               question: {
-                json_key: "rental-addproperty",
+                question_key: "rental-addproperty",
 
                 category: "Rental",
 
@@ -1965,7 +1947,7 @@ export const surveyData = {
           questionFlow: [
             {
               question: {
-                json_key: "cgt-rtt",
+                question_key: "cgt-rtt",
 
                 category: "Capital Gains",
 
@@ -2009,7 +1991,7 @@ export const surveyData = {
           questionFlow: [
             {
               question: {
-                json_key: "benefit-type",
+                question_key: "benefit-type",
 
                 category: "Pension and Benefits",
 
@@ -2018,8 +2000,7 @@ export const surveyData = {
 
                 type: "Multiple Choice",
 
-                sub_text:
-                  "Consult the <strong>help icon</strong> for more information.",
+                sub_text: "Consult the <strong>help icon</strong> for more information.",
 
                 help_text:
                   "<h3> \nTax-free and taxable state benefits \n</h3> \n<p> \nTaxable state benefits include: \n<ul> \n<li>Bereavement Allowance (previously known as Widows Pension)</li> \n<li>Carers Allowance</li> \n<li>Contribution-based Employment and Support Allowance (ESA)</li> \n<li>Incapacity Benefit (from the 29th week you get it)</li> \n<li>Jobseekers Allowance (JSA)</li> \n<li>pensions paid by the Industrial Death Benefit scheme</li> \n<li>the State Pension</li> \n<li>Widowed Parents Allowance</li> \n</ul> \n</p> \n<p> \nTax-free state benefits include: \n<ul> \n<li>Attendance Allowance</li> \n<li>Bereavement support payment</li> \n<li>Child Benefit‚ this is income-based so you'll have to pay tax if you earn above the basic rate band</li> \n<li>Child Tax Credit</li> \n<li>Disability Living Allowance (DLA)</li> \n<li>Free TV Licence for over 75s</li> \n<li>Guardians Allowance</li> \n<li>Housing Benefit</li> \n<li>Income Support, you may have to pay tax on Income Support if you were involved in a strike</li> \n<li>Income-related Employment and Support Allowance (ESA)</li> \n<li>Industrial Injuries Benefit</li> \n<li>Bereavement Support Payments</li> \n<li>Maternity Allowance</li> \n<li>Pension Credit</li> \n<li>Personal Independence Payment (PIP)</li> \n<li>Severe Disablement Allowance</li> \n<li>Universal Credit</li> \n<li>War Widows Pension</li> \n<li>Winter Fuel Payments and Christmas Bonus</li> \n<li>Working Tax Credit</li> \n</ul> \n</p>",
@@ -2148,12 +2129,11 @@ export const surveyData = {
           questionFlow: [
             {
               question: {
-                json_key: "finalising-poa_multi",
+                question_key: "finalising-poa_multi",
 
                 category: "General",
 
-                question:
-                  "Did you make any payments on account for this tax year?",
+                question: "Did you make any payments on account for this tax year?",
 
                 type: "Boolean Multi",
 
@@ -2181,12 +2161,11 @@ export const surveyData = {
                   {
                     booleanQuestion: {
                       question: {
-                        json_key: "finalising-poa",
+                        question_key: "finalising-poa",
 
                         category: "General",
 
-                        question:
-                          "Did you make any payments on account for this tax year?",
+                        question: "Did you make any payments on account for this tax year?",
 
                         type: "Boolean",
 
@@ -2207,7 +2186,7 @@ export const surveyData = {
                     questionObjects: [
                       {
                         question: {
-                          json_key: "finalising-poa_jan",
+                          question_key: "finalising-poa_jan",
 
                           category: "General",
 
@@ -2231,7 +2210,7 @@ export const surveyData = {
 
                       {
                         question: {
-                          json_key: "finalising-poa_july",
+                          question_key: "finalising-poa_july",
 
                           category: "General",
 
@@ -2275,7 +2254,7 @@ export const surveyData = {
           questionFlow: [
             {
               question: {
-                json_key: "personal_info-name_dob",
+                question_key: "personal_info-name_dob",
 
                 category: "Personal Info",
 
@@ -2304,7 +2283,7 @@ export const surveyData = {
                 questionObjects: [
                   {
                     question: {
-                      json_key: "personal_info-first_name",
+                      question_key: "personal_info-first_name",
 
                       category: "Personal Info",
 
@@ -2334,7 +2313,7 @@ export const surveyData = {
 
                   {
                     question: {
-                      json_key: "personal_info-last_name",
+                      question_key: "personal_info-last_name",
 
                       category: "Personal Info",
 
@@ -2364,7 +2343,7 @@ export const surveyData = {
 
                   {
                     question: {
-                      json_key: "personal_info-date_of_birth",
+                      question_key: "personal_info-date_of_birth",
 
                       category: "Personal Info",
 

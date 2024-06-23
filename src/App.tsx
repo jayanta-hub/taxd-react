@@ -1,23 +1,21 @@
-import React, { useEffect } from "react";
 import "./App.css";
-import { MantineProvider } from "@mantine/core";
-import "@mantine/core/styles.css";
-import { surveyData } from "./utility/surveyData";
-import Surveycopy from "./component/survey/Surveycopy";
-import { Provider } from "react-redux";
-import { store } from "./store/store";
-import Home from "./component/home/Home";
+import "react-phone-number-input/style.css";
+import { Box } from "@mantine/core";
+import { BrowserRouter as Router, Route, Routes, Navigate } from "react-router-dom";
+import { Assessment, Dashboard, Home } from "./pages";
 
 function App() {
-  const data1 = surveyData?.data?.data?.categories?.Introduction?.questionFlow;
-
   return (
-    <MantineProvider>
-      {/* <Survey /> */}
-      <Provider store={store}>
-        <Home />
-      </Provider>
-    </MantineProvider>
+    <Box className="App" style={{ backgroundColor: "#ffffff" }}>
+      <Router>
+        <Routes>
+          <Route path="*" element={<Navigate to="/dashboard" replace />} />
+          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/home" element={<Home />} />
+          <Route path="/assessment" element={<Assessment />} />
+        </Routes>
+      </Router>
+    </Box>
   );
 }
 
