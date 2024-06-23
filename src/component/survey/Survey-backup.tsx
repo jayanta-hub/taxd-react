@@ -1,11 +1,13 @@
 import { forwardRef, useCallback, useMemo } from "react";
-import { Box, Button, Group, Text, rem } from "@mantine/core";
-import { useForm } from "@mantine/form";
 import PhoneInputWithCountrySelect from "react-phone-number-input";
-import { Address, MultiQ, BooleanMulti, GroupCheckbox } from "../index";
+import { Box, Button, Group, Text, rem } from "@mantine/core";
+import { createFormContext } from "@mantine/form";
+import GroupCheckbox from "../group-checkbox/GroupCheckbox";
 import { useAssessmentMutation } from "../../store/api";
-import { SurveyProps, queObjProps } from "../../types";
+import MultiQ from "../multiQ/MultiQ";
+import Address from "../address/Address";
 
+const [FormProvider, useFormContext, useForm] = createFormContext();
 const Survey = forwardRef(
   ({
     renderData,
@@ -14,126 +16,75 @@ const Survey = forwardRef(
     targetRef,
     renderDataLength,
     onNextClick,
-  }: SurveyProps): JSX.Element => {
+  }: {
+    renderDataLength: number;
+    renderData: any;
+    index: number;
+    onBackClick: () => void;
+    onNextClick: () => void;
+    targetRef: any;
+  }): JSX.Element => {
     const [assessment, { isLoading: loading }] = useAssessmentMutation();
-    console.log("🚀 ~ assessment:", assessment);
-
-    const regexValidation = (queObj: any, value: any) => {
-      return new RegExp(queObj?.question?.validation?.regex).test(value)
-        ? null
-        : queObj?.question?.validation?.title;
-    };
-    const nestedQuestions = (
-      validateObj: object,
-      nestedQuestionObjects: any,
-      question_key: string,
-      type: string,
-      sub_questions: any,
-    ) => {
-      nestedQuestionObjects.forEach((sub_q: any) => {
-        if (sub_q?.questionObjects?.length > 0) {
-          nestedQuestions(validateObj, sub_q?.questionObjects, question_key, type, sub_questions);
-        }
-        if (sub_q?.booleanQuestion) {
-          // construct the parent with child level question validation object
-          validateObj[question_key][sub_q?.booleanQuestion?.question?.question_key] = (
-            values: any,
-          ) => {
-            return values === null || values === undefined
-              ? sub_q?.booleanQuestion?.question?.errorMessage || "Required."
-              : null;
-          };
-        } else {
-          // construct the parent with child level question validation object
-
-          validateObj[question_key][sub_q?.question?.question_key] = (value: any, values: any) => {
-            if (type === "Boolean Multi") {
-              return values[question_key][sub_questions?.[0]?.boolean_key]
-                ? value
-                  ? null
-                  : sub_q?.question?.errorMessage || "Required."
-                : null;
-            }
-            if (value?.length < 1 || !value) {
-              return sub_q?.question?.errorMessage || "Required.";
-            }
-
-            return regexValidation(sub_q, value) || null;
-          };
-        }
-      });
-    };
-
-    const subNestedQuestions = (
-      validateObj: object,
-      nestedQuestionObjects: any,
-      question_key: string,
-    ) => {
-      nestedQuestionObjects.forEach((sub_q: any) => {
-        if (sub_q?.questionObjects?.length > 0) {
-          subNestedQuestions(validateObj, sub_q?.questionObjects, question_key);
-        }
-        validateObj[question_key][sub_q?.question?.question_key] = (value: any) => {
-          if (sub_q?.question?.validation?.regex && (value?.length > 1 || value)) {
-            return regexValidation(sub_q, value) || null;
-          }
-          return null;
-        };
-      });
-    };
     //Construct Validate Object
-    const constructValidateObject = useCallback(() => {
-      const validateObj: object = {};
+    // form for each question
 
+    const constructValidateObject = useCallback(() => {
+      const validateObj: { [key: string]: (values: any) => string | null } = {};
       // Early return if formData is empty or missing
       if (!renderData || ![renderData]?.length) {
         return validateObj;
       }
-      [renderData].forEach((queObj: queObjProps) => {
-        const {
-          question: {
-            questionObjects,
-            required,
-            question_key,
-            errorMessage,
-            type,
-            sub_questions = null,
-          },
-        } = queObj;
-        if (questionObjects?.length > 0) {
-          if (required) {
-            // construct the parent level question validation object
-
-            validateObj[question_key] = {};
-            nestedQuestions(validateObj, questionObjects, question_key, type, sub_questions);
-          } else {
-            // optional validation
-
-            validateObj[question_key] = {};
-            subNestedQuestions(validateObj, questionObjects, question_key);
-          }
-        } else if (required) {
-          // construct the parent level Multi Choice / Boolean / Single Choice/ Muilt Boolean question validation object
-
-          validateObj[question_key] = (values: any) => {
-            if (values?.length < 1 || !values) {
-              return errorMessage || "Required.";
+      const createValidationObject = (formData: any) => {
+        [formData].forEach((queObj: any) => {
+          if (queObj?.question?.questionObjects?.length > 0) {
+            if (queObj?.question?.required) {
+              queObj?.question?.questionObjects.forEach((sub_q: any) => {
+                createValidationObject(sub_q);
+              });
+            } else {
+              validateObj[queObj?.question?.question_key] = (values: any) => {
+                if (values?.length < 1 || !values) {
+                  return queObj?.question?.errorMessage || "Required.";
+                }
+                return new RegExp(queObj?.question?.validation?.regex).test(values)
+                  ? null
+                  : queObj?.question?.validation?.title;
+              };
             }
-            return regexValidation(queObj, values) || null;
-          };
-        }
-      });
+          } else {
+            validateObj[queObj?.question?.question_key] = (values: any) => {
+              if (values?.length < 1 || !values) {
+                return queObj?.question?.errorMessage || "Required.";
+              }
+              return new RegExp(queObj?.question?.validation?.regex).test(values)
+                ? null
+                : queObj?.question?.validation?.title;
+            };
+          }
+        });
+      };
+      createValidationObject(renderData);
       console.log("validateObj", validateObj);
       return validateObj;
     }, [renderData]);
 
     //Get Initial Form Data
     const getInitialFormData = useCallback(() => {
-      const initialValues: object = {};
-      [renderData]?.forEach((parent_q) => {
-        // Create  Question Initial Value
-        initialValues[parent_q?.question?.question_key] = parent_q?.answer ?? [];
-      });
+      const initialValues: any = {};
+      const createInitialValue = (formData: any) => {
+        [formData]?.forEach((parent_q) => {
+          // Create  Question Initial Value
+          if (parent_q?.question?.questionObjects?.length > 0) {
+            parent_q?.question?.questionObjects.forEach((sub_q: any) => {
+              initialValues[sub_q?.question?.question_key] = sub_q?.answer;
+            });
+          } else {
+            initialValues[parent_q?.question?.question_key] =
+              Object.keys(parent_q?.answer).length !== 0 ? parent_q?.answer : [];
+          }
+        });
+      };
+      createInitialValue(renderData);
       return { initialValues };
     }, [renderData]);
     const form = useForm({
@@ -141,22 +92,19 @@ const Survey = forwardRef(
       validate: constructValidateObject(),
       validateInputOnBlur: true,
     });
-    console.log("form.values", form.values);
+    console.log("form", form);
     console.log("form.errors", form.errors);
     async function handleSubmit(e: any) {
-      console.log("lkmsdwedl", {
-        question_key: renderData?.question?.question_key,
-        answer: e[renderData?.question?.question_key],
+      console.log("lkmsdwedl");
+      // post api for sumit form
+      await assessment({
+        patch: {
+          question_key: renderData?.question?.question_key,
+          answer: e[renderData?.question?.question_key],
+        },
+        assessment_id: "f95ba433-2319-11ef-8e3d-0ae99b1edddc",
+        assessment_type: "self-assessment",
       });
-      // post api for submit form
-      // await assessment({
-      //   patch: {
-      //     question_key: renderData?.question?.question_key,
-      //     answer: e[renderData?.question?.question_key],
-      //   },
-      //   assessment_id: "f95ba433-2319-11ef-8e3d-0ae99b1edddc",
-      //   assessment_type: "self-assessment",
-      // });
       onNextClick();
     }
     /**
@@ -174,7 +122,14 @@ const Survey = forwardRef(
         const { name, choices, type, question_key, questionObjects } = field;
         switch (type) {
           case "Multi Q":
-            return <MultiQ key={question_key} renderItems={questionObjects} form={form} />;
+            return (
+              <MultiQ
+                key={question_key}
+                renderItems={questionObjects}
+                useFormContext={useFormContext}
+                form={form}
+              />
+            );
           case "Phone":
             return (
               <PhoneInputWithCountrySelect
@@ -196,26 +151,28 @@ const Survey = forwardRef(
               <GroupCheckbox
                 key={question_key}
                 id={question_key}
-                form={form}
+                formData={form}
                 renderItems={choices}
                 handleSubmit={handleSubmit}
                 type={type}
-                multiSelect={type === "Multiple Choice" ? true : false}
+                useFormContext={useFormContext}
+                multiSelect={
+                  type === "Multiple Choice"
+                    ? true
+                    : type !== "Boolean"
+                      ? false
+                      : type !== "Single Choice"
+                }
               />
             );
           case "Address":
             return (
-              <Address key={question_key} renderItems={questionObjects} type={type} form={form} />
-            );
-          case "Boolean Multi":
-            return (
-              <BooleanMulti
+              <Address
                 key={question_key}
                 renderItems={questionObjects}
                 type={type}
+                useFormContext={useFormContext}
                 form={form}
-                handleSubmit={handleSubmit}
-                parent_question={question_key}
               />
             );
 
@@ -301,18 +258,20 @@ const Survey = forwardRef(
     }, [renderData, form, loading]);
 
     return (
-      <Box
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-        }}
-        m={150}
-        w="50%"
-        // bg="#F8F9FA"
-        mih={600}>
-        {formBuilder || "No Element found"}
-      </Box>
+      <FormProvider form={form}>
+        <Box
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+          }}
+          m={150}
+          w="50%"
+          // bg="#F8F9FA"
+          mih={600}>
+          {formBuilder || "No Element found"}
+        </Box>
+      </FormProvider>
     );
   },
 );

@@ -8,8 +8,8 @@ type ObjAny = { [k: string]: any };
  * @returns {object} - The merged object containing the combined properties of obj1 and obj2.
  */
 export function mergeObjects(obj1: ObjAny, obj2: ObjAny) {
-  const o1 = { ...obj1 },
-    o2 = { ...obj2 };
+  const o1 = { ...obj1 };
+    const o2 = { ...obj2 };
 
   for (const key in o1) {
     if (o1.hasOwnProperty(key)) {
@@ -33,7 +33,7 @@ export function isFn(fn: any) {
 
 export const PATTERNS = Object.freeze({
   EMAIL: /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/,
-  PASSWORD: ''
+  PASSWORD: "",
 });
 
 /** StorybookTableRow type */
@@ -46,12 +46,39 @@ type STR = {
 };
 
 export function storybookTable(data: STR[], desc = "", sort = true) {
-  const getTR = (d: STR) => {
-    return `<tr><td style="padding: 0px;fontWeight:700; border-spacing: 0;">${d.lab}</td><td style="padding: 0px;">${d.desc}</td></tr>`;
-  };
+  const getTR = (d: STR) => `<tr><td style="padding: 0px;fontWeight:700; border-spacing: 0;">${d.lab}</td><td style="padding: 0px;">${d.desc}</td></tr>`;
 
   if (sort) data = data?.sort((a, b) => (a.lab > b.lab ? 1 : b.lab > a.lab ? -1 : 0));
 
   const tr = data?.reduce((prev: string, d: STR) => `${prev}${getTR(d)}`, "");
   return `<p>${desc}</p><table>${tr}</table>`;
+}
+
+export function updateBrik(jsonData: any, brikId: any, newData: any): any {
+  const jsonDataToRender = JSON.parse(
+    JSON.stringify(jsonData?.data?.data?.categories)
+  );
+
+  for (const page in jsonDataToRender) {
+    for (const brik of jsonDataToRender[page]?.questionFlow || []) {
+      if (
+        brik?.question.hasOwnProperty("json_key") &&
+        brik?.question.json_key === brikId
+      ) {
+        brik.question.choices = [...newData];
+      }
+    }
+  }
+
+  return (
+    {
+      ...jsonData,
+      data: {
+        data: {
+          ...jsonData?.data.data,
+          categories: jsonDataToRender,
+        },
+      },
+    } || `Brik Id ${brikId} is not found.`
+  );
 }

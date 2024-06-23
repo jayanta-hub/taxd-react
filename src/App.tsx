@@ -1,20 +1,21 @@
-import React from "react";
 import "./App.css";
-import { MantineProvider } from "@mantine/core";
-import Formbuilder from "./component/formBuilder/Formbuilder";
-import { ILoginForm } from "./types/ILoginForm";
-import "@mantine/core/styles.css";
-import { surveyData } from "./utility/data";
-import Survey from "./component/survey/Survey";
-import Surveycopy from "./component/survey/Surveycopy";
+import "react-phone-number-input/style.css";
+import { Box } from "@mantine/core";
+import { BrowserRouter as Router, Route, Routes, Navigate } from "react-router-dom";
+import { Assessment, Dashboard, Home } from "./pages";
 
 function App() {
-  const data1 = surveyData?.data?.data?.categories?.Introduction?.questionFlow;
   return (
-    <MantineProvider>
-      {/* <Survey /> */}
-      <Surveycopy />
-    </MantineProvider>
+    <Box className="App" style={{ backgroundColor: "#ffffff" }}>
+      <Router>
+        <Routes>
+          <Route path="*" element={<Navigate to="/dashboard" replace />} />
+          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/home" element={<Home />} />
+          <Route path="/assessment" element={<Assessment />} />
+        </Routes>
+      </Router>
+    </Box>
   );
 }
 
